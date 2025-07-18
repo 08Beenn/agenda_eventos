@@ -1,14 +1,27 @@
-// EventFormModal - Para el formulario de creación/edición
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const EventFormModal = ({ show, onClose, onSubmit }) => {
-  const [formData, setFormData] = React.useState({
+const EventFormModal = ({ show, onClose, onSubmit, editingData }) => {
+  const [formData, setFormData] = useState({
     day: '',
     month: '',
     title: '',
     location: '',
     text: ''
   });
+
+  useEffect(() => {
+    if (editingData) {
+      setFormData(editingData);
+    } else {
+      setFormData({
+        day: '',
+        month: '',
+        title: '',
+        location: '',
+        text: ''
+      });
+    }
+  }, [editingData]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -35,13 +48,6 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
     }
 
     onSubmit(formData);
-    setFormData({
-      day: '',
-      month: '',
-      title: '',
-      location: '',
-      text: ''
-    });
     onClose();
   };
 
@@ -50,12 +56,12 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
       <div className="modal-dialog">
         <form onSubmit={handleSubmit} className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Crear Nuevo Evento</h5>
+            <h5 className="modal-title">{editingData ? 'Editar Evento' : 'Crear Nuevo Evento'}</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
 
-            {/* Campo Dia */}
+            {/* Campo Día */}
             <div className="mb-3">
               <label htmlFor="day" className="form-label">Día</label>
               <div className="input-group">
@@ -80,7 +86,7 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
               <label htmlFor="month" className="form-label">Mes</label>
               <div className="input-group">
                 <input
-                  placeholder="Ej:JUL"
+                  placeholder="Ej: JUL"
                   type="text"
                   maxLength="3"
                   className="form-control"
@@ -95,7 +101,7 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
               </div>
             </div>
 
-            {/* Campo Titulo */}
+            {/* Campo Título */}
             <div className="mb-3">
               <label htmlFor="title" className="form-label">Título</label>
               <div className="input-group">
@@ -113,11 +119,10 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
               </div>
             </div>
 
-            {/* Campo Ubicacion */}
+            {/* Campo Ubicación */}
             <div className="mb-3">
               <label htmlFor="location" className="form-label">Ubicación</label>
               <div className="input-group">
-
                 <input
                   type="text"
                   className="form-control"
@@ -126,12 +131,11 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                 />
-                {/* Icono */}
                 <i className="bi bi-geo-alt-fill mx-4 fs-3"></i>
               </div>
             </div>
 
-            {/* Campo Descripcion */}
+            {/* Campo Descripción */}
             <div className="mb-3">
               <label htmlFor="text" className="form-label">Descripción</label>
               <div className="input-group">
@@ -152,7 +156,9 @@ const EventFormModal = ({ show, onClose, onSubmit }) => {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-            <button type="submit" className="btn btn-primary">Crear Carta</button>
+            <button type="submit" className="btn btn-primary">
+              {editingData ? 'Actualizar Evento' : 'Crear Evento'}
+            </button>
           </div>
         </form>
       </div>
